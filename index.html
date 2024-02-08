@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حاسبة القرار</title>
+<style>
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #333;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    direction: rtl; /* تغيير اتجاه النص إلى اليمين */
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #444;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+#questions {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#result {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>حاسبة القرار</h1>
+
+    <div id="questions"></div>
+
+    <button onclick="calculateResult()">حساب النتيجة</button>
+
+    <p id="result"></p>
+</div>
+
+<script>
+ 
+const questions = [
+    "هل هذا القرار يتعلق بمستقبلي المهني؟",
+    "هل هذا الخيار يتناسب مع قيمي الشخصية؟",
+    "هل لدي الوقت والموارد اللازمة لتنفيذ هذا القرار؟",
+    "هل لدي الدعم اللازم من الأشخاص المهمين بالنسبة لي؟",
+    "هل هذا الخيار متوافق مع أهدافي الطويلة الأمد؟",
+    "هل لدي القدرة على تحمل المخاطر المرتبطة بهذا القرار؟",
+    "هل لدي المعرفة الكافية لاتخاذ هذا القرار؟",
+    "هل هذا القرار سيؤثر على صحتي العقلية بشكل سلبي؟",
+    "هل هذا القرار يتناسب مع توجهاتي الشخصية؟",
+    "هل هذا القرار سيؤثر إيجابًا على علاقاتي الشخصية؟",
+    "هل لدي الثقة في قدرتي على اتخاذ هذا القرار؟",
+    "هل هناك بدائل أخرى يجب أن أنظر إليها؟",
+    "هل لدي الخبرة اللازمة لاتخاذ هذا القرار؟",
+    "هل هذا القرار يتطلب موافقة أو توافق من الأطراف الأخرى؟",
+    "هل لدي الشجاعة الكافية لاتخاذ هذا القرار؟",
+    "هل هناك فوائد محتملة تبرر اتخاذ هذا القرار؟",
+    "هل سيؤدي تأجيل هذا القرار إلى مشاكل أكبر في المستقبل؟",
+    "هل يتطلب هذا القرار تغييرًا كبيرًا في حياتي اليومية؟",
+    "هل لدي ما يكفي من المعلومات لاتخاذ هذا القرار؟",
+    "هل هناك عواقب غير متوقعة قد تنشأ عن هذا القرار؟",
+    "هل هذا القرار يتوافق مع قيم النزاهة والأخلاق؟",
+    "هل سيؤثر هذا القرار على التوازن بين العمل والحياة الشخصية؟",
+    "هل لدي الدعم العاطفي اللازم لتجاوز التحديات المرتبطة بهذا القرار؟",
+    "هل هناك فرصة للتعلم والنمو الشخصي من خلال تنفيذ هذا القرار؟",
+    "هل هناك عوامل ثقافية أو اجتماعية يجب أن أنظر إليها قبل اتخاذ هذا القرار؟",
+    "هل سأحتاج إلى توظيف مهارات جديدة لتنفيذ هذا القرار؟",
+    "هل سيؤثر هذا القرار على فرصي للتقدم المهني؟",
+    "هل يمكن تقدير التكاليف والفوائد المحتملة لهذا القرار بشكل دقيق؟",
+    "هل سيؤثر هذا القرار على العلاقات مع الزملاء أو المجتمع المهني؟",
+    "هل يتناسب هذا القرار مع رؤيتي الشخصية والمهنية على المدى البعيد؟"
+];
+const questionsDiv = document.getElementById("questions");
+
+questions.forEach((question, index) => {
+    const label = document.createElement("label");
+    label.textContent = question;
+
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "question" + index;
+    input.value = "نعم";
+    input.required = true;
+
+    label.appendChild(input);
+    label.appendChild(document.createTextNode("نعم"));
+
+    const noInput = document.createElement("input");
+    noInput.type = "radio";
+    noInput.name = "question" + index;
+    noInput.value = "لا";
+    noInput.required = true;
+
+    label.appendChild(noInput);
+    label.appendChild(document.createTextNode("لا"));
+
+    questionsDiv.appendChild(label);
+    questionsDiv.appendChild(document.createElement("br"));
+});
+
+function calculateResult() {
+    const inputs = document.querySelectorAll("input[type='radio']:checked");
+    const yesCount = Array.from(inputs).filter(input => input.value === "نعم").length;
+    const totalQuestions = questions.length;
+
+    const percentage = (yesCount / totalQuestions) * 100;
+
+    let resultText = "";
+    if (percentage < 25) {
+        resultText = "لا تتخذ هذا القرار، فهو سيء.";
+    } else if (percentage >= 25 && percentage < 50) {
+        resultText = "هذا القرار محفوف بالمخاطر.";
+    } else if (percentage >= 50 && percentage < 75) {
+        resultText = "قرار جيد يمكنك أن تتخذه.";
+    } else if (percentage >= 75 && percentage <= 100) {
+        resultText = "قرار جيد يمكنك أن تتخذه الآن بدون أي تردد.";
+    }
+
+    const resultElement = document.getElementById("result");
+    resultElement.textContent = resultText;
+}
+</script>
+
+</body>
+</html>
